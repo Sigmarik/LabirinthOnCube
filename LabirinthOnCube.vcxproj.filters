@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{06513158-91b1-4386-a4c9-5cfe1059649f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models">
+      <UniqueIdentifier>{2e7b4229-d0ac-4df0-8d73-ac131d3b93a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models\FeatureMeshes">
+      <UniqueIdentifier>{b8111470-c912-4a16-9108-fa4c542c1f89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Textures">
+      <UniqueIdentifier>{33588570-a7ce-43ca-8f51-345785ba5cae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GEngine">
+      <UniqueIdentifier>{b158a218-3830-406a-b687-4a254e44cd5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GEngine">
+      <UniqueIdentifier>{27583eee-75e7-43db-b617-78f015c342d6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSide.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="EBO.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="FBO.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="tform.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Randoms.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshComponent.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="stb.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="VAO.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="VBO.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLevel.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteComponent.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureAtlas.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="StarDome.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StaringComponent.cpp">
+      <Filter>Source Files\GEngine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="glms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSide.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="EBO.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="FBO.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="tform.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Randoms.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshComponent.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="VAO.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="VBO.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLevel.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteComponent.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureAtlas.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="StarDome.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StaringComponent.h">
+      <Filter>Header Files\GEngine</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="default.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="distort.glsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="shadow.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="textured.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="indices.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="bloomingSphere.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CubeMeshSmooth.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="TreeMesh.txt">
+      <Filter>Resource Files\Models\FeatureMeshes</Filter>
+    </Text>
+    <Text Include="MushroomMesh.txt">
+      <Filter>Resource Files\Models\FeatureMeshes</Filter>
+    </Text>
+    <Text Include="BrickMesh.txt">
+      <Filter>Resource Files\Models\FeatureMeshes</Filter>
+    </Text>
+    <Text Include="RockMesh.txt">
+      <Filter>Resource Files\Models\FeatureMeshes</Filter>
+    </Text>
+    <Text Include="ArtifactPillarMesh.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="ZSquareMesh.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="YSquareMesh.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="texturedDepth.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </Text>
+    <Text Include="StarSquare.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="perlinNoice.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="wasd.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

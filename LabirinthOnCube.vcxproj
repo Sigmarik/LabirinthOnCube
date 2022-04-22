@@ -204,6 +204,7 @@
     <Text Include="ArtifactPillarMesh.txt" />
     <Text Include="BrickMesh.txt" />
     <Text Include="CubeMeshSmooth.txt" />
+    <Text Include="Flag.txt" />
     <Text Include="MushroomMesh.txt" />
     <Text Include="RockMesh.txt" />
     <Text Include="StarSquare.txt" />

@@ -1,7 +1,7 @@
 #include "StarDome.h"
 
 glm::mat4 myLookAt(glm::vec3 start, glm::vec3 end, glm::vec3 up) {
-	glm::vec3 forward = glm::normalize(end - start);
+	glm::vec3 forward = -glm::normalize(end - start);
 	glm::vec3 right = glm::normalize(glm::cross(forward, up));
 	glm::vec3 newUp = glm::normalize(glm::cross(forward, right));
 	return glm::mat4(
@@ -33,5 +33,6 @@ StarDome::StarDome(GameLevel* level, int count, RandomGenerator* generator) {
 			myLookAt(position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0)) * 
 			glm::scale(glm::vec3(0.06f * (float)generator->range(25, 125) / 100.0f)));
 	}
+	//std::cout << "Created " << count << " stars with " << mesh->mesh->vertices.size() << " vertices\n";
 	mesh->mesh->updateBuffers();
 }

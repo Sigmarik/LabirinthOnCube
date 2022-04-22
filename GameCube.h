@@ -6,6 +6,8 @@
 #include "GameLevel.h"
 
 class Cube : public GameComponent {
+private:
+	void shiftCell(GameSide* gSide, int i_it, int j_it, glm::vec2 shift, int slideCount = 0);
 public:
 	GameSide top, bottom, front, back, left, right;
 	int side;

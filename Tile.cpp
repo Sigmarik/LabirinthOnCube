@@ -26,10 +26,6 @@ Tile::Tile(int routs, GameLevel* level, int _id) {
 	dPlane = SpriteComponent(parentLevel, parentLevel->getAtlas("wasd.png"), "d");
 	float centreShift = 0.3;
 	float yShift = 0.2;
-	wPlane.transform[3] = glm::vec4(centreShift, yShift, 0.0, 1.0);
-	sPlane.transform[3] = glm::vec4(-centreShift, yShift, 0.0, 1.0);
-	aPlane.transform[3] = glm::vec4(0.0, yShift, -centreShift, 1.0);
-	dPlane.transform[3] = glm::vec4(0.0, yShift, centreShift, 1.0);
 	wPlane.hidden = true;
 	sPlane.hidden = true;
 	aPlane.hidden = true;
@@ -48,22 +44,22 @@ float Tile::roadCoefficient(float x, float y) {
 	if (openedRouts == 0) return 0.0;
 	float roadWidth = 0.2;
 	float coef = roadTransition(min((float)1.0, sqrt(x * x + y * y) / (roadWidth * 2.0f)));
-	// Positive X
+	// Positive X = [W]
 	if (openedRouts & 1 && x > 0.0) {
 		float newK = roadTransition(min(abs(y) / roadWidth, (float)1.0));
 		coef = max(coef, newK);
 	}
-	// Negative X
+	// Negative X = [S]
 	if (openedRouts & 2 && x < 0.0) {
 		float newK = roadTransition(min(abs(y) / roadWidth, (float)1.0));
 		coef = max(coef, newK);
 	}
-	// Positive Y
+	// Positive Y = [D]
 	if (openedRouts & 4 && y > 0.0) {
 		float newK = roadTransition(min(abs(x) / roadWidth, (float)1.0));
 		coef = max(coef, newK);
 	}
-	// Negative Y
+	// Negative Y = [A]
 	if (openedRouts & 8 && y < 0.0) {
 		float newK = roadTransition(min(abs(x) / roadWidth, (float)1.0));
 		coef = max(coef, newK);
@@ -80,10 +76,8 @@ void Tile::generateGeometry(RandomGenerator& generator) {
 	int gridSide = 20;
 	float noiseRoof = 2.0 / (float)gridSide;
 	float meanedX = 0.0, meanedZ = 0.0;
-	for (int i = 0; i < gridSide * gridSide; i++) {
-		mesh->vertices.push_back(Vertex());
-	}
-	std::vector<const char*> featureMeshNames = {"TreeMesh.txt", "RockMesh.txt", "MushroomMesh.txt"};
+	mesh->vertices = std::vector<Vertex>(2 * gridSide * gridSide, Vertex());
+	std::vector<const char*> featureMeshNames = {"TreeMesh.txt", "TreeMesh.txt", "RockMesh.txt", "MushroomMesh.txt"};
 	for (int i = 0; i < gridSide; i++) {
 		for (int j = 0; j < gridSide; j++) {
 			float relativeX = (float)i / (float)(gridSide - 1) - 0.5;
@@ -99,6 +93,13 @@ void Tile::generateGeometry(RandomGenerator& generator) {
 				glm::vec3(relativeX, relativeY, relativeZ),
 				glm::vec2((float)i / gridSide, (float)j / gridSide),
 				color
+			);
+			float gradient = max(0.0, 1.0 - glm::length(glm::vec2(relativeX, relativeY)) * 2.0);
+			float downwardsY = ((float)generator.range(0, 2e3) / (float)1e3) * 0.1;
+			mesh->vertices[gridSide * gridSide + i * gridSide + j] = Vertex(
+				glm::vec3(relativeX, -downwardsY * gradient, relativeZ),
+				glm::vec2((float)i / gridSide, (float)j / gridSide),
+				glm::mix(glm::vec4(0.3, 0.3, 0.31, 1.0), glm::vec4(0.9, 0.9, 1.0, 1.0), downwardsY * gradient * 10.0)
 			);
 			if (i != 0 && i + 1 != gridSide && j != 0 && j + 1 != gridSide && 
 				roadAmount <= 0.3 && generator.range(0, 100) < 20) {
@@ -133,6 +134,14 @@ void Tile::generateGeometry(RandomGenerator& generator) {
 				mesh->faces.push_back((i + 0) * gridSide + (j + 0));
 				mesh->faces.push_back((i + 1) * gridSide + (j + 1));
 				mesh->faces.push_back((i + 0) * gridSide + (j + 1));
+
+				mesh->faces.push_back(gridSide * gridSide + (i + 1) * gridSide + (j + 0));
+				mesh->faces.push_back(gridSide * gridSide + (i + 0) * gridSide + (j + 0));
+				mesh->faces.push_back(gridSide * gridSide + (i + 1) * gridSide + (j + 1));
+
+				mesh->faces.push_back(gridSide * gridSide + (i + 1) * gridSide + (j + 1));
+				mesh->faces.push_back(gridSide * gridSide + (i + 0) * gridSide + (j + 0));
+				mesh->faces.push_back(gridSide * gridSide + (i + 0) * gridSide + (j + 1));
 			}
 			else {
 				mesh->faces.push_back((i + 0) * gridSide + (j + 0));
@@ -142,6 +151,14 @@ void Tile::generateGeometry(RandomGenerator& generator) {
 				mesh->faces.push_back((i + 1) * gridSide + (j + 0));
 				mesh->faces.push_back((i + 1) * gridSide + (j + 1));
 				mesh->faces.push_back((i + 0) * gridSide + (j + 1));
+
+				mesh->faces.push_back(gridSide * gridSide + (i + 1) * gridSide + (j + 0));
+				mesh->faces.push_back(gridSide * gridSide + (i + 0) * gridSide + (j + 0));
+				mesh->faces.push_back(gridSide * gridSide + (i + 0) * gridSide + (j + 1));
+
+				mesh->faces.push_back(gridSide * gridSide + (i + 1) * gridSide + (j + 1));
+				mesh->faces.push_back(gridSide * gridSide + (i + 1) * gridSide + (j + 0));
+				mesh->faces.push_back(gridSide * gridSide + (i + 0) * gridSide + (j + 1));
 			}
 		}
 	}
@@ -210,4 +227,48 @@ Tile* Tile::checkPixel(Camera* camera, glm::vec2 pixel) {
 	if (checkTriangle(leftTopC, leftBtmC, rghtTopC, pixel) ||
 		checkTriangle(rghtBtmC, leftBtmC, rghtTopC, pixel)) return this;
 	else return nullptr;
+}
+
+glm::mat4 Tile::worldMatrix() {
+	return curentWorld;
+}
+
+template <typename T>
+T newMix(T a, T b, double x) {
+	if (x < 0.0) return a;
+	if (x > 1.0) return b;
+	return a * (float)(1.0 - x) + b * (float)x;
+}
+
+void Tile::update(float deltaTime) {
+	//if (curentWorld == glm::mat4(-100.0)) curentWorld = GameComponent::worldMatrix();
+	glm::mat4 newTransform = GameComponent::worldMatrix();
+	curentWorld = newMix(curentWorld, newTransform, (double)7.0 * deltaTime);
+	GameComponent::update(deltaTime);
+	float centreShift = 0.3;
+	float yShift = 0.3;
+	wPlane.transform[3] = glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(centreShift, yShift, 0.0), 1.0);
+	sPlane.transform[3] = glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(-centreShift, yShift, 0.0), 1.0);
+	aPlane.transform[3] = glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(0.0, yShift, -centreShift), 1.0);
+	dPlane.transform[3] = glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(0.0, yShift, centreShift), 1.0); 
+}
+
+std::vector<glm::vec4> Tile::getConnections() {
+	std::vector<glm::vec4> answer;
+	float centreShift = 0.5;
+	float yShift = 0.0;
+	if (openedRouts & (1 << 0)) answer.push_back(GameComponent::worldMatrix() * glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(centreShift, yShift, 0.0), 1.0));
+	if (openedRouts & (1 << 1)) answer.push_back(GameComponent::worldMatrix() * glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(-centreShift, yShift, 0.0), 1.0));
+	if (openedRouts & (1 << 3)) answer.push_back(GameComponent::worldMatrix() * glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(0.0, yShift, -centreShift), 1.0));
+	if (openedRouts & (1 << 2)) answer.push_back(GameComponent::worldMatrix() * glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(0.0, yShift, centreShift), 1.0));
+	return answer;
+}
+
+bool Tile::checkAccess(Tile* tile) {
+	for (glm::vec3 pointA : getConnections()) {
+		for (glm::vec3 pointB : tile->getConnections()) {
+			if (glm::distance(pointA, pointB) <= getScale() * 0.001) return true;
+		}
+	}
+	return false;
 }

@@ -97,6 +97,9 @@ int main() {
 	mainLevel.loadAsset("TreeMesh.txt", true, 0.05);
 	mainLevel.getMesh("TreeMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 
+	mainLevel.loadAsset("Flag.txt", true, 0.5);
+	mainLevel.getMesh("Flag.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+
 	mainLevel.loadAsset("MushroomMesh.txt", true, 0.05 * 0.6);
 	mainLevel.getMesh("MushroomMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 
@@ -169,7 +172,7 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
 
@@ -177,6 +180,7 @@ int main() {
 	float time = glfwGetTime();
 	int tick = 0;
 	float debugPrintTime = 0;
+	int previousLMBState = GLFW_RELEASE;
 	while (!glfwWindowShouldClose(window)) {
 		float newTime = glfwGetTime();
 		float deltaTime = newTime - time;
@@ -184,9 +188,7 @@ int main() {
 		tick++;
 		glfwSetWindowTitle(window, ("Game window, FPS:" + std::to_string(1.0 / deltaTime)).c_str());
 
-		for (GameComponent* component : mainLevel.worldComponents) {
-			component->update(deltaTime);
-		}
+		testCube.update(deltaTime);
 
 		mainLevel.getShader("DepthShader")->activate();
 		glUniform1f(mainLevel.getShader("DepthShader")->uniform("time"), time);
@@ -258,17 +260,26 @@ int main() {
 		Tile* traceResult = testCube.checkPixel(&camera, glm::vec2(xPos, -yPos));
 		testCube.resetHighlights(false);
 		if (traceResult && glfwGetMouseButton(window, 1) != GLFW_PRESS) {
-			if (glfwGetMouseButton(window, 0) == GLFW_PRESS) {
+			if (glfwGetMouseButton(window, 0) == GLFW_PRESS && glfwGetMouseButton(window, 0) != previousLMBState) {
 				testCube.resetHighlights(true);
 				traceResult->highlight = 1.0;
 				testCube.activeTile = traceResult;
 			}
 			else {
-				traceResult->highlight = std::max(0.5f, traceResult->highlight);
+				if (true || (testCube.activeTile && testCube.activeTile->checkAccess(traceResult)))
+					traceResult->highlight = std::max(0.5f, traceResult->highlight);
 			}
 		}
-		if (glfwGetMouseButton(window, 0) == GLFW_PRESS && !traceResult) 
+		if (glfwGetMouseButton(window, 0) == GLFW_PRESS && !traceResult) {
 			testCube.resetHighlights(true);
+			testCube.activeTile = nullptr;
+		}
+		for (int key : {GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D}) {
+			if (glfwGetKey(window, key) != GLFW_PRESS) continue;
+			//std::cout << "Preparing active tile " << testCube.activeTile << '\n';
+			testCube.receveInput(key, true);
+		}
+		previousLMBState = glfwGetMouseButton(window, 0);
 		camera.operateInputs(window, deltaTime);
 		glfwPollEvents();
 	}

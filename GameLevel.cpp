@@ -84,3 +84,14 @@ void GameComponent::assignParent() {
 		component->assignParent();
 	}
 }
+
+int GameComponent::childIndex(GameComponent* child) {
+	for (int i = 0; i < children.size(); i++) {
+		if (children[i] == child) return i;
+	}
+	throw std::runtime_error::runtime_error("Child not found.");
+}
+
+float GameComponent::getScale(glm::vec3 sample) {
+	return glm::length(glm::mat3(worldMatrix()) * sample) / glm::length(sample);
+}

@@ -35,7 +35,7 @@ void main() {
 	tileUp = (objectCenteredMatrix * vec4(0.0, 1.0, 0.0, 1.0)).xyz;
 	worldPosition = (objectMatrix * vec4(vertexPosition, 1.0)).xyz;
 	preprocessWorldPosition = worldPosition;
-	if (vertexColor.a > 0.999) {
+	if (vertexColor.a > 0.999 && vertexPosition.y > 0.0) {
 		float animationSpeed = 1.0;
 		float coordMult = 30.0;
 		float amplitude = 0.008;

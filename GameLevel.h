@@ -43,9 +43,11 @@ public:
 	void attach(GameComponent* component);
 	void attachTo(GameComponent* component);
 	bool getVisible();
+	int childIndex(GameComponent* child);
 	virtual void draw(Camera& camera, int shaderSlot = RENDER_MAIN_PASS);
 	virtual void update(float deltaTime);
 	virtual void assignParent();
+	virtual float getScale(glm::vec3 sample = glm::vec3(0.0, 0.0, 1.0));
 };
 
 #endif

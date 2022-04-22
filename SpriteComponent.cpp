@@ -1,6 +1,6 @@
 #include "SpriteComponent.h"
 
-//  Im laughing red parrot: ZiuZiuZiuZiu  Phuboohhhhh!
+//  Im a laughing red parrot: ZiuZiuZiuZiu  Phuboohhhhh!
 
 // The f*ck I was doing here in comments?
 

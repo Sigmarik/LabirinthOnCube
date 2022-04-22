@@ -131,6 +131,9 @@ void main() {
 	vec4 finalColor = mix(wallColor, trailColor, mixCoefficient);
 	float borderAmount = pow(min(1.0, min(1.0 - abs(vertColor.x), 1.0 - abs(vertColor.z)) * 5.0), 0.7);
 	vec4 paperColor = mix(vec4(0.8, 0.7, 0.6, 1.0), vec4(1.0, 1.0, 1.0, 1.0), highlight);
+	//if (integer / 9 == 3) {
+	//	paperColor *= 0.0;
+	//}
 	finalColor = mix(paperColor, finalColor, borderAmount);
 	if (vertColor.a >= 0.999) {
 		finalColor = vertColor;
@@ -151,14 +154,14 @@ void main() {
 	vec3 lightbugColor = vec3(1.0, 0.9, 0.5);
 	vec3 lightbugPosition = vec3(
 		sin(time * 0.5 + (tilePosition.x + tilePosition.z) * 7) * 0.4,
-		0.14 + sin(time * 0.4 + (tilePosition.x + tilePosition.y) * 10) * 0.01,
+		0.14 + sin(time * 0.4 + (tilePosition.x + tilePosition.y) * 7) * 0.01,
 		cos(time * 0.3 + (tilePosition.y + tilePosition.z) * 7) * 0.4
 	);
 	lightbugLight += operateLightbug(lightbugPosition, normalize(tileUp + normalDelta), specularFactor * 0.6);
 
 	lightbugPosition = vec3(
 		sin(time * 0.3 + (tilePosition.x + tilePosition.z) * 70) * 0.4,
-		0.14 + sin(time * 0.4 + (tilePosition.x + tilePosition.y) * 100) * 0.01,
+		0.14 + sin(time * 0.4 + (tilePosition.x + tilePosition.y) * 3) * 0.01,
 		cos(time * 0.7 + (tilePosition.y + tilePosition.z) * 70) * 0.4
 	);
 	lightbugLight += operateLightbug(lightbugPosition, normalize(tileUp + normalDelta), specularFactor * 0.6);
@@ -169,5 +172,5 @@ void main() {
 		+ environmentColor * specularLight * lightAmount + vec4(lightbugColor * lightbugLight, 0.0), 
 		vec4(0.8, 0.79, 0.8, 1.0), fogDencity(preprocessWorldPosition));
 
-	//fragColor = vec4(tileUp, 1.0);
+	//fragColor = vec4(integer / (6.0 * 9.0));
 }

@@ -216,6 +216,9 @@
     <Text Include="StarSquare.txt">
       <Filter>Resource Files\Models</Filter>
     </Text>
+    <Text Include="Flag.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="perlinNoice.jpg">

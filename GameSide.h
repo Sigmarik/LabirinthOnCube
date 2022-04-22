@@ -21,6 +21,7 @@ public:
 	GameSide(GameLevel* level = nullptr);
 	GameSide(int side, RandomGenerator& generator, GameLevel* level, int startIndex = 0);
 	void assignHintSquares();
+	void reassignChildren();
 	Tile* shift(Tile* insertion, int x, int y, int direction, float time);
 	Tile* checkPixel(Camera* camera, glm::vec2 pixel);
 	//Tile* rayHit(glm::vec3 start, glm::vec3 direction);

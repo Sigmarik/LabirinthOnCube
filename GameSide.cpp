@@ -12,13 +12,13 @@ GameSide::GameSide(int side, RandomGenerator& generator, GameLevel* level, int s
 		for (int j = 0; j < size; j++) {
 			tiles[i][j] = new Tile(generator.range(0, 16), parentLevel, i * size + j + startIndex);
 			tiles[i][j]->parent = this;
-			tiles[i][j]->transform = glm::translate(glm::vec3((float)(i * 2 - size + 1) / 2.0, 0.0, 
+			tiles[i][j]->transform = glm::translate(glm::vec3(
+				(float)(i * 2 - size + 1) / 2.0, 0.0, 
 				(float)(j * 2 - size + 1) / 2.0));
 			tiles[i][j]->generateGeometry(generator);
 			children.push_back(tiles[i][j]);
 		}
 	}
-	//tiles[0][0]->highlight = 1.0;
 }
 
 void GameSide::assignHintSquares() {
@@ -86,4 +86,17 @@ Tile* GameSide::checkPixel(Camera* camera, glm::vec2 pixel) {
 		}
 	}
 	return answer;
+}
+
+void GameSide::reassignChildren() {
+	children.clear();
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			children.push_back(tiles[i][j]);
+			tiles[i][j]->transform[3] = glm::vec4(
+				(float)((i * 2 - size + 1) / 2.0), 0.0,
+				(float)((j * 2 - size + 1) / 2.0), 1.0);
+			tiles[i][j]->parent = this;
+		}
+	}
 }

@@ -13,6 +13,7 @@ T min(T a, T b) {
 }
 
 Tile::Tile(int routs, GameLevel* level, int _id) {
+	shouldWave = true;
 	openedRouts = routs;
 	parentLevel = level;
 	id = _id;
@@ -257,10 +258,14 @@ std::vector<glm::vec4> Tile::getConnections() {
 	std::vector<glm::vec4> answer;
 	float centreShift = 0.5;
 	float yShift = 0.0;
-	if (openedRouts & (1 << 0)) answer.push_back(GameComponent::worldMatrix() * glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(centreShift, yShift, 0.0), 1.0));
-	if (openedRouts & (1 << 1)) answer.push_back(GameComponent::worldMatrix() * glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(-centreShift, yShift, 0.0), 1.0));
-	if (openedRouts & (1 << 3)) answer.push_back(GameComponent::worldMatrix() * glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(0.0, yShift, -centreShift), 1.0));
-	if (openedRouts & (1 << 2)) answer.push_back(GameComponent::worldMatrix() * glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(0.0, yShift, centreShift), 1.0));
+	if (openedRouts & (1 << 0)) answer.push_back(GameComponent::worldMatrix() * 
+		glm::vec4(/*glm::inverse(glm::mat3(transform)) * */glm::vec3(centreShift, yShift, 0.0), 1.0));
+	if (openedRouts & (1 << 1)) answer.push_back(GameComponent::worldMatrix() * 
+		glm::vec4(/*glm::inverse(glm::mat3(transform)) * */glm::vec3(-centreShift, yShift, 0.0), 1.0));
+	if (openedRouts & (1 << 2)) answer.push_back(GameComponent::worldMatrix() * 
+		glm::vec4(/*glm::inverse(glm::mat3(transform)) * */glm::vec3(0.0, yShift, centreShift), 1.0));
+	if (openedRouts & (1 << 3)) answer.push_back(GameComponent::worldMatrix() * 
+		glm::vec4(/*glm::inverse(glm::mat3(transform)) * */glm::vec3(0.0, yShift, -centreShift), 1.0));
 	return answer;
 }
 

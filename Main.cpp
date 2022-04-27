@@ -16,6 +16,8 @@
 #include "Texture.h"
 #include "GameLevel.h"
 #include "StarDome.h"
+#include "Artefact.h"
+#include "Player.h"
 
 int main() {
 	glfwInit();
@@ -92,13 +94,34 @@ int main() {
 	glUniform1i(mainLevel.getShader("TexturedShader")->uniform("atlas"), 3);
 	mainLevel.getShader("TexturedDepthShader")->activate();
 	glUniform1i(mainLevel.getShader("TexturedDepthShader")->uniform("atlas"), 3);
-	std::cout << "Updooting complete.\n";
+	std::cout << "Updoot complete.\n";
 
 	mainLevel.loadAsset("TreeMesh.txt", true, 0.05);
 	mainLevel.getMesh("TreeMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 
-	mainLevel.loadAsset("Flag.txt", true, 0.5);
+	mainLevel.loadAsset("Flag.txt", true, 0.3);
 	mainLevel.getMesh("Flag.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Flag.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("pilar.txt", true, 0.1);
+	mainLevel.getMesh("pilar.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("pilar.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("Wizard.txt", true, 0.23);
+	mainLevel.getMesh("Wizard.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Wizard.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("Sword.txt", true, 0.4);
+	mainLevel.getMesh("Sword.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Sword.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("Trophy.txt", true, 0.4);
+	mainLevel.getMesh("Trophy.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Trophy.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("Rings.txt", true, 0.4);
+	mainLevel.getMesh("Rings.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Rings.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
 
 	mainLevel.loadAsset("MushroomMesh.txt", true, 0.05 * 0.6);
 	mainLevel.getMesh("MushroomMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
@@ -162,6 +185,19 @@ int main() {
 	testCube.assignParent();
 	testCube.parent = nullptr;
 	testCube.transform = glm::scale(glm::vec3(1.0 / testCube.side));
+	std::vector<Artefact> artefacts;
+	artefacts.push_back(Artefact("Sword.txt", &mainLevel));
+	artefacts.push_back(Artefact("Trophy.txt", &mainLevel));
+	artefacts.push_back(Artefact("Rings.txt", &mainLevel)); 
+	Tile* playerTile = testCube.top.tiles[testCube.side / 2][testCube.side / 2];
+	for (int i = 0; i < artefacts.size(); i++) {
+		artefacts[i].decideOnPosition(playerTile, &generator);
+	}
+	Player player(&mainLevel, 0, 6);
+	playerTile->attach(&player);
+	player.stage = PLAYER_PREPARING_FLIP;
+	for (int artefactIndex = 0; artefactIndex < artefacts.size(); artefactIndex++)
+		player.bountylist.push_back(&artefacts[artefactIndex]);
 	std::cout << "Level generated successfully, defining render features...\n";
 	
 	StarDome stars(&mainLevel, 1000, &generator);
@@ -264,9 +300,21 @@ int main() {
 				testCube.resetHighlights(true);
 				traceResult->highlight = 1.0;
 				testCube.activeTile = traceResult;
+				if (player.stage == PLAYER_PREPARING_RUN && ((Tile*)player.parent)->checkAccess(traceResult)) {
+					player.shouldSmoothMovement = true;
+					player.parent->removeChild(&player);
+					traceResult->attach(&player);
+					player.stage = PLAYER_PREPARING_FLIP;
+					testCube.resetHighlights(true);
+					player.checkArtifacts();
+				}
+				if (player.stage == PLAYER_PREPARING_RUN) {
+					testCube.resetHighlights(true);
+				}
 			}
 			else {
-				if (true || (testCube.activeTile && testCube.activeTile->checkAccess(traceResult)))
+				if (player.stage != PLAYER_WAITING_FOR_TURN && player.stage != PLAYER_FINISHED_TURN && 
+					(player.stage == PLAYER_PREPARING_FLIP || ((Tile*)player.parent)->checkAccess(traceResult)))
 					traceResult->highlight = std::max(0.5f, traceResult->highlight);
 			}
 		}
@@ -275,8 +323,9 @@ int main() {
 			testCube.activeTile = nullptr;
 		}
 		for (int key : {GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D}) {
-			if (glfwGetKey(window, key) != GLFW_PRESS) continue;
-			//std::cout << "Preparing active tile " << testCube.activeTile << '\n';
+			if (glfwGetKey(window, key) != GLFW_PRESS || player.stage != PLAYER_PREPARING_FLIP) continue;
+			player.shouldSmoothMovement = false;
+			player.stage = PLAYER_PREPARING_RUN;
 			testCube.receveInput(key, true);
 		}
 		previousLMBState = glfwGetMouseButton(window, 0);

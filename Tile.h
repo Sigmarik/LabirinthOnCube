@@ -16,6 +16,7 @@ public:
 	int openedRouts = 0;
 	float updateTime = -1.0;
 	float highlight = 0.0;
+	bool hasArtefact = false;
 	glm::mat4 curentWorld = glm::mat4(1.0);
 	int id = 0;
 	GameLevel* parentLevel = nullptr;

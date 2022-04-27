@@ -95,3 +95,18 @@ int GameComponent::childIndex(GameComponent* child) {
 float GameComponent::getScale(glm::vec3 sample) {
 	return glm::length(glm::mat3(worldMatrix()) * sample) / glm::length(sample);
 }
+
+void GameComponent::removeChild(GameComponent* child) {
+	int index = childIndex(child);
+	std::swap(children[index], children[children.size() - 1]);
+	children.pop_back();
+}
+
+template <typename T>
+std::vector<T> GameComponent::getChildrenOfClass() {
+	std::vector<T> answer = std::vector<T>();
+	for (GameComponent* child : children) {
+		if ((T)child) answer.push_back((T)child);
+	}
+	return answer;
+}

@@ -30,6 +30,9 @@ uniform float cameraWH;
 const float atmosphereTop = 0.2;
 const int fogIterations = 100;
 const float lightbugRadius = 0.2;
+const vec4 moonColor = vec4(0.2, 0.2, 0.4, 1.0);
+const vec4 sunColor = vec4(1.0, 0.97, 0.96, 1.0);
+const vec4 ambientColor = vec4(1.2, 1.1, 1.3, 1.0);
 
 float inLight(vec3 position) {
 	vec4 shadowmapCoordinate = shadowMatrix * vec4(position, 1.0);
@@ -113,6 +116,7 @@ void main() {
 		newNormal = normalize(newNormal);
 	}
 	float diffuseLight = max(0.0, dot(normalize(lightDirection), newNormal) * (1.0 - ambientLight)); 
+	float moonLight = max(0.0, dot(normalize(-lightDirection), newNormal) * (1.0 - ambientLight)); 
 	float specularLight = 0.0;
 	vec3 cameraVector = normalize(cameraPosition - worldPosition);
 	vec3 medianVector = normalize(cameraVector + normalize(lightDirection));
@@ -127,13 +131,9 @@ void main() {
 	vec4 bottomsColor = vec4(0.1, 0.1, 0.16, 1.0) / 3.0;
 	vec4 wallColor = mix(bottomsColor, topsColor, 0.2 + pow(vertColor.y, 0.5) * 0.8);
 	float mixCoefficient = pow(clamp(vertColor.a + noiseValue * 0.5 * (1.0 - vertColor.a), 0.0, 1.0), 5.0);
-	//mixCoefficient += noiseValue * 0.33 - 0.33 / 2.0;
 	vec4 finalColor = mix(wallColor, trailColor, mixCoefficient);
 	float borderAmount = pow(min(1.0, min(1.0 - abs(vertColor.x), 1.0 - abs(vertColor.z)) * 5.0), 0.7);
 	vec4 paperColor = mix(vec4(0.8, 0.7, 0.6, 1.0), vec4(1.0, 1.0, 1.0, 1.0), highlight);
-	//if (integer / 9 == 3) {
-	//	paperColor *= 0.0;
-	//}
 	finalColor = mix(paperColor, finalColor, borderAmount);
 	if (vertColor.a >= 0.999) {
 		finalColor = vertColor;
@@ -168,8 +168,10 @@ void main() {
 
 	lightbugLight *= sqrt(max(0.0, -dot(lightDirection, tileUp)));
 
-	fragColor = mix(finalColor * environmentColor * (ambientLight + diffuseLight * lightAmount) 
-		+ environmentColor * specularLight * lightAmount + vec4(lightbugColor * lightbugLight, 0.0), 
+	fragColor = mix(finalColor * environmentColor * ambientLight
+		+ finalColor * sunColor * diffuseLight * lightAmount 
+		+ finalColor * moonColor * moonLight * (1.0 - lightAmount)
+		+ sunColor * specularLight * lightAmount + vec4(lightbugColor * lightbugLight, 0.0), 
 		vec4(0.8, 0.79, 0.8, 1.0), fogDencity(preprocessWorldPosition));
 
 	//fragColor = vec4(integer / (6.0 * 9.0));

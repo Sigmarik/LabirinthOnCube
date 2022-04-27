@@ -4,6 +4,7 @@
 #include <map>
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 #include "StaticMesh.h"
 #include "TextureAtlas.h"
@@ -44,6 +45,8 @@ public:
 	void attachTo(GameComponent* component);
 	bool getVisible();
 	int childIndex(GameComponent* child);
+	void removeChild(GameComponent* child);
+	template <typename T> std::vector<T> getChildrenOfClass();
 	virtual void draw(Camera& camera, int shaderSlot = RENDER_MAIN_PASS);
 	virtual void update(float deltaTime);
 	virtual void assignParent();

@@ -23,6 +23,7 @@ uniform mat4 cameraMatrix = mat4(1.0);
 uniform mat4 objectMatrix = mat4(1.0);
 uniform mat4 objectCenteredMatrix = mat4(1.0);
 uniform float time = 0;
+uniform bool shouldWave = true;
 
 vec3 circularize(vec3 position) {
 	return position / pow(length(position), 0.13);
@@ -35,7 +36,7 @@ void main() {
 	tileUp = (objectCenteredMatrix * vec4(0.0, 1.0, 0.0, 1.0)).xyz;
 	worldPosition = (objectMatrix * vec4(vertexPosition, 1.0)).xyz;
 	preprocessWorldPosition = worldPosition;
-	if (vertexColor.a > 0.999 && vertexPosition.y > 0.0) {
+	if (shouldWave && vertexColor.a > 0.999 && vertexPosition.y > 0.0) {
 		float animationSpeed = 1.0;
 		float coordMult = 30.0;
 		float amplitude = 0.008;

@@ -146,9 +146,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Artefact.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="FBO.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="StarDome.cpp" />
     <ClCompile Include="StaringComponent.cpp" />
@@ -170,9 +172,11 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Artefact.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="FBO.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="StarDome.h" />
     <ClInclude Include="StaringComponent.h" />
@@ -206,10 +210,15 @@
     <Text Include="CubeMeshSmooth.txt" />
     <Text Include="Flag.txt" />
     <Text Include="MushroomMesh.txt" />
+    <Text Include="pilar.txt" />
+    <Text Include="Rings.txt" />
     <Text Include="RockMesh.txt" />
     <Text Include="StarSquare.txt" />
+    <Text Include="Sword.txt" />
     <Text Include="texturedDepth.frag" />
     <Text Include="TreeMesh.txt" />
+    <Text Include="Trophy.txt" />
+    <Text Include="Wizard.txt" />
     <Text Include="YSquareMesh.txt" />
     <Text Include="ZSquareMesh.txt" />
   </ItemGroup>

@@ -10,7 +10,12 @@ GameSide::GameSide(int side, RandomGenerator& generator, GameLevel* level, int s
 	tiles = std::vector<std::vector<Tile*>>(size, std::vector<Tile*>(size, nullptr));
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			tiles[i][j] = new Tile(generator.range(0, 16), parentLevel, i * size + j + startIndex);
+			int routs = 0;
+			for (int pointer = 0; pointer < 4; pointer++) {
+				int gen = generator.range(0, 100);
+				if (gen < 60) routs += (1 << pointer);
+			}
+			tiles[i][j] = new Tile(routs, parentLevel, i * size + j + startIndex);
 			tiles[i][j]->parent = this;
 			tiles[i][j]->transform = glm::translate(glm::vec3(
 				(float)(i * 2 - size + 1) / 2.0, 0.0, 

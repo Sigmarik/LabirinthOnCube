@@ -8,6 +8,7 @@
 class StaticMeshComponent : public GameComponent {
 public:
 	StaticMesh* mesh = nullptr;
+	bool shouldWave = false;
 	void draw(Camera& camera, int shaderSlot) override;
 };
 

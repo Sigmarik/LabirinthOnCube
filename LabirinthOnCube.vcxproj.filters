@@ -99,6 +99,12 @@
     <ClCompile Include="StaringComponent.cpp">
       <Filter>Source Files\GEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Artefact.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glms.h">
@@ -161,6 +167,12 @@
     <ClInclude Include="StaringComponent.h">
       <Filter>Header Files\GEngine</Filter>
     </ClInclude>
+    <ClInclude Include="Artefact.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -217,6 +229,21 @@
       <Filter>Resource Files\Models</Filter>
     </Text>
     <Text Include="Flag.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="pilar.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="Wizard.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="Sword.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="Trophy.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="Rings.txt">
       <Filter>Resource Files\Models</Filter>
     </Text>
   </ItemGroup>

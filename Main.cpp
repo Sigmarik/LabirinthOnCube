@@ -81,8 +81,10 @@ int main() {
 
 	int cubeSide = 3;
 
+	RandomGenerator generator;
+
 	std::cout << "Loading assets...\n";
-	GameLevel mainLevel;
+	GameLevel mainLevel(&generator);
 	mainLevel.mainCamera = &camera;
 	mainLevel.loadShader("TerrainShader", "default.vert", "default.frag");
 	mainLevel.loadShader("DepthShader", "default.vert", "shadow.frag");
@@ -111,6 +113,26 @@ int main() {
 	mainLevel.getMesh("Wizard.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 	mainLevel.getMesh("Wizard.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
 
+	mainLevel.loadAsset("Berserk.txt", true, 0.23);
+	mainLevel.getMesh("Berserk.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Berserk.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("Elsa.txt", true, 0.23);
+	mainLevel.getMesh("Elsa.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Elsa.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("Yaga.txt", true, 0.23);
+	mainLevel.getMesh("Yaga.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Yaga.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("Knight.txt", true, 0.23);
+	mainLevel.getMesh("Knight.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Knight.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("Golem.txt", true, 0.38);
+	mainLevel.getMesh("Golem.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Golem.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
 	mainLevel.loadAsset("Sword.txt", true, 0.4);
 	mainLevel.getMesh("Sword.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 	mainLevel.getMesh("Sword.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
@@ -123,8 +145,20 @@ int main() {
 	mainLevel.getMesh("Rings.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 	mainLevel.getMesh("Rings.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
 
+	mainLevel.loadAsset("Crown.txt", true, 0.4);                    
+	mainLevel.getMesh("Crown.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Crown.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("ArrowWithCircle.txt", true, 0.8);
+	mainLevel.getMesh("ArrowWithCircle.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("ArrowWithCircle.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("MagicalStuff.txt", true, 0.8);
+	mainLevel.getMesh("MagicalStuff.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("MagicalStuff.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
 	mainLevel.loadAsset("MushroomMesh.txt", true, 0.05 * 0.6);
-	mainLevel.getMesh("MushroomMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("MushroomMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader"); 
 
 	mainLevel.loadAsset("RockMesh.txt", true, 0.05 * 0.4);
 	mainLevel.getMesh("RockMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
@@ -179,8 +213,6 @@ int main() {
 	glUniform1i(mainLevel.getShader("TerrainShader")->uniform("noiseMap"), 1);
 	std::cout << "Texture markings finished\nGenerating level...\n";
 
-	RandomGenerator generator;
-
 	Cube testCube(cubeSide, generator, &mainLevel);
 	testCube.assignParent();
 	testCube.parent = nullptr;
@@ -193,11 +225,23 @@ int main() {
 	for (int i = 0; i < artefacts.size(); i++) {
 		artefacts[i].decideOnPosition(playerTile, &generator);
 	}
-	Player player(&mainLevel, 0, 6);
-	playerTile->attach(&player);
-	player.stage = PLAYER_PREPARING_FLIP;
+	std::vector<Player*> players;
+	for (GameSide* side : testCube.sides()) {
+		players.push_back(new Player(&mainLevel, players.size()));
+		//testCube.top.tiles[side->size / 2][side->size / 2]->attach(players[players.size() - 1]);
+		side->tiles[side->size / 2][side->size / 2]->attach(players[players.size() - 1]);
+		players[players.size() - 1]->bot = true;
+		players[players.size() - 1]->stage = PLAYER_WAITING_FOR_TURN;
+	}
+	players[0]->bot = false;
 	for (int artefactIndex = 0; artefactIndex < artefacts.size(); artefactIndex++)
-		player.bountylist.push_back(&artefacts[artefactIndex]);
+		players[0]->bountylist.push_back(&artefacts[artefactIndex]);
+	StaticMeshComponent* activeCrown = new StaticMeshComponent();
+	activeCrown->mesh = mainLevel.getMesh("Crown.txt");
+	StaticMeshComponent* selectionArrow = new StaticMeshComponent();
+	selectionArrow->mesh = mainLevel.getMesh("ArrowWithCircle.txt");
+	StaticMeshComponent* artefactPointer = new StaticMeshComponent();
+	artefactPointer->mesh = mainLevel.getMesh("MagicalStuff.txt");
 	std::cout << "Level generated successfully, defining render features...\n";
 	
 	StarDome stars(&mainLevel, 1000, &generator);
@@ -208,7 +252,7 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CCW);
 
@@ -217,6 +261,7 @@ int main() {
 	int tick = 0;
 	float debugPrintTime = 0;
 	int previousLMBState = GLFW_RELEASE;
+	float playerActionTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window)) {
 		float newTime = glfwGetTime();
 		float deltaTime = newTime - time;
@@ -225,6 +270,25 @@ int main() {
 		glfwSetWindowTitle(window, ("Game window, FPS:" + std::to_string(1.0 / deltaTime)).c_str());
 
 		testCube.update(deltaTime);
+		activeCrown->transform = glm::mat4(
+			glm::vec4(sin(time), 0.0, cos(time), 0.0),
+			glm::vec4(0.0, 1.0, 0.0, 0.0),
+			glm::vec4(-cos(time), 0.0, sin(time), 0.0),
+			glm::vec4(0.0, 0.3, 0.0, 1.0)
+		);
+		selectionArrow->transform = glm::mat4(
+			glm::vec4(sin(-time), 0.0, cos(-time), 0.0),
+			glm::vec4(0.0, 1.0, 0.0, 0.0),
+			glm::vec4(-cos(-time), 0.0, sin(-time), 0.0),
+			glm::vec4(0.0, 0.3, 0.0, 1.0)
+		);
+
+		artefactPointer->transform = glm::mat4(
+			glm::vec4(sin(-time * 1.5), 0.0, cos(-time * 1.5), 0.0),
+			glm::vec4(0.0, 1.0, 0.0, 0.0),
+			glm::vec4(-cos(-time * 1.5), 0.0, sin(-time * 1.5), 0.0),
+			glm::vec4(0.0, 0.15 + 0.06 * sin(time), 0.0, 1.0)
+		);
 
 		mainLevel.getShader("DepthShader")->activate();
 		glUniform1f(mainLevel.getShader("DepthShader")->uniform("time"), time);
@@ -288,6 +352,35 @@ int main() {
 
 		glfwSwapBuffers(window);
 
+		Player* activePlayer = nullptr;
+		for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
+			if (players[playerIndex]->stage == PLAYER_FINISHED_TURN) continue;
+			activePlayer = players[playerIndex];
+			if (activePlayer->stage == PLAYER_WAITING_FOR_TURN) {
+				activePlayer->stage++;
+			}
+			break;
+		}
+		if (!activePlayer) {
+			for (int playerIndex = 1; playerIndex < players.size(); playerIndex++) {
+				players[playerIndex]->stage = PLAYER_WAITING_FOR_TURN;
+			}
+			players[0]->stage = PLAYER_PREPARING_FLIP;
+			activePlayer = players[0];
+		}
+
+		if (activePlayer->bot && time - playerActionTime > 1.5) {
+			for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
+				players[playerIndex]->shouldSmoothMovement = false;
+			}
+			activePlayer->makeTurn(generator);
+			playerActionTime = time;
+		}
+
+		if (activeCrown->parent != activePlayer) {
+			activeCrown->attachTo(activePlayer);
+		}
+
 		debugPrintTime = time;
 		double xPix, yPix;
 		glfwGetCursorPos(window, &xPix, &yPix);
@@ -295,38 +388,53 @@ int main() {
 		float yPos = 2.0 * yPix / windowHeight - 1.0;
 		Tile* traceResult = testCube.checkPixel(&camera, glm::vec2(xPos, -yPos));
 		testCube.resetHighlights(false);
-		if (traceResult && glfwGetMouseButton(window, 1) != GLFW_PRESS) {
-			if (glfwGetMouseButton(window, 0) == GLFW_PRESS && glfwGetMouseButton(window, 0) != previousLMBState) {
+		selectionArrow->detach();
+		artefactPointer->detach();
+		if (!activePlayer->bot) {
+			if (traceResult && glfwGetMouseButton(window, 1) != GLFW_PRESS) {
+				if (glfwGetMouseButton(window, 0) == GLFW_PRESS && glfwGetMouseButton(window, 0) != previousLMBState) {
+					testCube.resetHighlights(true);
+					traceResult->highlight = 1.0;
+					testCube.activeTile = traceResult;
+					if (activePlayer->stage == PLAYER_PREPARING_RUN && ((Tile*)activePlayer->parent)->checkAccess(traceResult)) {
+						activePlayer->shouldSmoothMovement = true;
+						traceResult->attach(activePlayer);
+						activePlayer->stage = PLAYER_FINISHED_TURN;
+						playerActionTime = time;
+						testCube.resetHighlights(true);
+						activePlayer->checkArtifacts();
+					}
+					if (activePlayer->stage == PLAYER_PREPARING_RUN) {
+						testCube.resetHighlights(true);
+					}
+				}
+				else {
+					if (activePlayer->stage != PLAYER_WAITING_FOR_TURN && activePlayer->stage != PLAYER_FINISHED_TURN &&
+						(activePlayer->stage == PLAYER_PREPARING_FLIP || ((Tile*)activePlayer->parent)->checkAccess(traceResult))) {
+						traceResult->highlight = std::max(0.5f, traceResult->highlight);
+						if (activePlayer->bot == false && activePlayer->stage == PLAYER_PREPARING_RUN) {
+							selectionArrow->attachTo(traceResult);
+						}
+					}
+				}
+			}
+			if (glfwGetMouseButton(window, 0) == GLFW_PRESS && !traceResult) {
 				testCube.resetHighlights(true);
-				traceResult->highlight = 1.0;
-				testCube.activeTile = traceResult;
-				if (player.stage == PLAYER_PREPARING_RUN && ((Tile*)player.parent)->checkAccess(traceResult)) {
-					player.shouldSmoothMovement = true;
-					player.parent->removeChild(&player);
-					traceResult->attach(&player);
-					player.stage = PLAYER_PREPARING_FLIP;
-					testCube.resetHighlights(true);
-					player.checkArtifacts();
-				}
-				if (player.stage == PLAYER_PREPARING_RUN) {
-					testCube.resetHighlights(true);
-				}
+				testCube.activeTile = nullptr;
 			}
-			else {
-				if (player.stage != PLAYER_WAITING_FOR_TURN && player.stage != PLAYER_FINISHED_TURN && 
-					(player.stage == PLAYER_PREPARING_FLIP || ((Tile*)player.parent)->checkAccess(traceResult)))
-					traceResult->highlight = std::max(0.5f, traceResult->highlight);
+			for (int key : {GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D}) {
+				if (glfwGetKey(window, key) != GLFW_PRESS || activePlayer->stage != PLAYER_PREPARING_FLIP) continue;
+				for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
+					players[playerIndex]->shouldSmoothMovement = false;
+				}
+				activePlayer->shouldSmoothMovement = false;
+				activePlayer->stage = PLAYER_PREPARING_RUN;
+				playerActionTime = time;
+				testCube.receveInput(key, true);
 			}
 		}
-		if (glfwGetMouseButton(window, 0) == GLFW_PRESS && !traceResult) {
-			testCube.resetHighlights(true);
-			testCube.activeTile = nullptr;
-		}
-		for (int key : {GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D}) {
-			if (glfwGetKey(window, key) != GLFW_PRESS || player.stage != PLAYER_PREPARING_FLIP) continue;
-			player.shouldSmoothMovement = false;
-			player.stage = PLAYER_PREPARING_RUN;
-			testCube.receveInput(key, true);
+		if (activePlayer && activePlayer->bountylist.size() > 0) {
+			activePlayer->objective()->attach(artefactPointer);
 		}
 		previousLMBState = glfwGetMouseButton(window, 0);
 		camera.operateInputs(window, deltaTime);

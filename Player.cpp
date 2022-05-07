@@ -11,8 +11,7 @@ void GameAction::undo() {}
 
 Player::Player(GameLevel* level, int index, int maxPlayers) {
 	parentLevel = level;
-	const char* names[1] = { "Wizard.txt" };
-	mesh = level->getMesh(names[index % (sizeof(names) / sizeof(names[0]))]);
+	StaticMesh* characterMesh = level->getMesh(level->characterNames[index % (level->characterNames.size())]);
 	if (maxPlayers <= 1) {
 		transform = glm::mat4(1.0);
 	}
@@ -28,6 +27,12 @@ Player::Player(GameLevel* level, int index, int maxPlayers) {
 				cos(angle) * amplitude, 1.0)
 		);
 	}
+	mesh = new StaticMesh();
+	mesh->shaders[RENDER_MAIN_PASS] = parentLevel->getShader("TerrainShader");
+	mesh->shaders[RENDER_DEPTH] = parentLevel->getShader("DepthShader");
+	mesh->attach(characterMesh, transform);
+	transform = glm::mat4(1.0);
+	mesh->updateBuffers();
 }
 
 bool Player::checkArtifacts() {
@@ -59,6 +64,44 @@ void Player::update(float deltaTime) {
 
 glm::mat4 Player::worldMatrix() {
 	return curentWorld;
+}
+
+bool Player::makeTurn(RandomGenerator& generator) {
+	if (!bot) return false;
+	Cube* cube = (Cube*)parent->parent->parent;
+	if (stage == PLAYER_PREPARING_FLIP) {
+		shouldSmoothMovement = false;
+		std::vector<GameSide*> sides = cube->sides();
+		GameSide* chosenSide = sides[generator.range(0, sides.size())];
+		int cellI = generator.range(0, chosenSide->size);
+		int cellJ = generator.range(0, chosenSide->size);
+		std::vector<int> keys = { GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D };
+		int key = keys[generator.range(0, keys.size())];
+		cube->activeTile = chosenSide->tiles[cellI][cellJ];
+		cube->receveInput(key, true);
+		stage = PLAYER_PREPARING_RUN;
+		return true;
+	}
+	if (stage == PLAYER_PREPARING_RUN) {
+		shouldSmoothMovement = true;
+		std::vector<GameSide*> sides = cube->sides();
+		Tile* targetTile = nullptr;
+		do {
+			GameSide* side = sides[generator.range(0, sides.size())];
+			int cellI = generator.range(0, side->size);
+			int cellJ = generator.range(0, side->size);
+			targetTile = side->tiles[cellI][cellJ];
+		} while (!((Tile*)parent)->checkAccess(targetTile));
+		attachTo(targetTile);
+		checkArtifacts();
+		stage = PLAYER_FINISHED_TURN;
+		return true;
+	}
+	return false;
+}
+
+Artefact* Player::objective() {
+	return bountylist[bountylist.size() - 1];
 }
 
 FlipTurn::FlipTurn(Tile* _tile, int key) {

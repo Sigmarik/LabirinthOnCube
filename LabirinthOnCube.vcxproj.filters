@@ -246,6 +246,30 @@
     <Text Include="Rings.txt">
       <Filter>Resource Files\Models</Filter>
     </Text>
+    <Text Include="Berserk.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="Yaga.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="Elsa.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="Knight.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="Golem.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="Crown.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="ArrowWithCircle.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="MagicalStuff.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="perlinNoice.jpg">

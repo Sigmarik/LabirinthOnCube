@@ -8,6 +8,7 @@
 
 #include "StaticMesh.h"
 #include "TextureAtlas.h"
+#include "Randoms.h"
 
 class GameComponent;
 
@@ -18,8 +19,9 @@ public:
 	std::map<const char*, TextureAtlas> atlases;
 	//TextureAtlas coreAtlas;
 	std::vector<GameComponent*> worldComponents;
+	std::vector<const char*> characterNames = { "Wizard.txt", "Berserk.txt", "Elsa.txt", "Yaga.txt", "Knight.txt", "Golem.txt" };
 	Camera* mainCamera = nullptr;
-	GameLevel();
+	GameLevel(RandomGenerator* generator);
 	Shader* getShader(const char* name);
 	StaticMesh* getMesh(const  char* name);
 	TextureAtlas* getAtlas(const char* name);
@@ -45,6 +47,7 @@ public:
 	void attachTo(GameComponent* component);
 	bool getVisible();
 	int childIndex(GameComponent* child);
+	void detach();
 	void removeChild(GameComponent* child);
 	template <typename T> std::vector<T> getChildrenOfClass();
 	virtual void draw(Camera& camera, int shaderSlot = RENDER_MAIN_PASS);

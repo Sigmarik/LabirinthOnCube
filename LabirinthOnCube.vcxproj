@@ -205,10 +205,17 @@
     <None Include="shadow.frag" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="ArrowWithCircle.txt" />
     <Text Include="ArtifactPillarMesh.txt" />
+    <Text Include="Berserk.txt" />
     <Text Include="BrickMesh.txt" />
+    <Text Include="Crown.txt" />
     <Text Include="CubeMeshSmooth.txt" />
+    <Text Include="Elsa.txt" />
     <Text Include="Flag.txt" />
+    <Text Include="Golem.txt" />
+    <Text Include="Knight.txt" />
+    <Text Include="MagicalStuff.txt" />
     <Text Include="MushroomMesh.txt" />
     <Text Include="pilar.txt" />
     <Text Include="Rings.txt" />
@@ -219,6 +226,7 @@
     <Text Include="TreeMesh.txt" />
     <Text Include="Trophy.txt" />
     <Text Include="Wizard.txt" />
+    <Text Include="Yaga.txt" />
     <Text Include="YSquareMesh.txt" />
     <Text Include="ZSquareMesh.txt" />
   </ItemGroup>

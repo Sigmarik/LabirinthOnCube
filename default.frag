@@ -30,7 +30,7 @@ uniform float cameraWH;
 const float atmosphereTop = 0.2;
 const int fogIterations = 100;
 const float lightbugRadius = 0.2;
-const vec4 moonColor = vec4(0.2, 0.2, 0.4, 1.0);
+const vec4 moonColor = vec4(0.2, 0.2, 0.23, 1.0);
 const vec4 sunColor = vec4(1.0, 0.97, 0.96, 1.0);
 const vec4 ambientColor = vec4(1.2, 1.1, 1.3, 1.0);
 
@@ -40,17 +40,18 @@ float inLight(vec3 position) {
 	shadowmapCoordinate += 1.0;
 	shadowmapCoordinate /= 2.0;
 	float answer = 0.0;
-	float distortionStep = 0.0005;
+	float shadowDelta = 0.0001;
+	float distortionStep = shadowDelta;
 	int sampleCounter = 0;
-	if (shadowmapCoordinate.z < texture(shadowmap, shadowmapCoordinate.xy).r + 0.001) answer += 1.0;
+	if (shadowmapCoordinate.z < texture(shadowmap, shadowmapCoordinate.xy).r + shadowDelta) answer += 1.0;
 	if (shadowmapCoordinate.z < texture(shadowmap, 
-		shadowmapCoordinate.xy + vec2(distortionStep, distortionStep)).r + 0.001) answer += 1.0;
+		shadowmapCoordinate.xy + vec2(distortionStep, distortionStep)).r + shadowDelta) answer += 1.0;
 	if (shadowmapCoordinate.z < texture(shadowmap, 
-		shadowmapCoordinate.xy + vec2(distortionStep, -distortionStep)).r + 0.001) answer += 1.0;
+		shadowmapCoordinate.xy + vec2(distortionStep, -distortionStep)).r + shadowDelta) answer += 1.0;
 	if (shadowmapCoordinate.z < texture(shadowmap, 
-		shadowmapCoordinate.xy + vec2(-distortionStep, distortionStep)).r + 0.001) answer += 1.0;
+		shadowmapCoordinate.xy + vec2(-distortionStep, distortionStep)).r + shadowDelta) answer += 1.0;
 	if (shadowmapCoordinate.z < texture(shadowmap, 
-		shadowmapCoordinate.xy + vec2(-distortionStep, -distortionStep)).r + 0.001) answer += 1.0;
+		shadowmapCoordinate.xy + vec2(-distortionStep, -distortionStep)).r + shadowDelta) answer += 1.0;
 	return answer / 5.0;
 }
 
@@ -81,7 +82,7 @@ float fogDencity(vec3 worldPosition) {
 const float ambientLight = 0.5;
 
 float operateLightbug(vec3 lightbugPosition, vec3 pointNormal, float specularity) {
-	float lightbugLight = pow(0.01, distance(lightbugPosition, localPosition) / lightbugRadius);
+	float lightbugLight = 1.3 * pow(0.016, distance(lightbugPosition, localPosition) / lightbugRadius);
 
 	vec4 lightbugWorld = circularize(objectMatrix * vec4(lightbugPosition, 1.0));
 	vec3 reflectedLightbug = worldPosition + reflect(lightbugWorld.xyz - worldPosition, pointNormal);
@@ -98,10 +99,10 @@ float operateLightbug(vec3 lightbugPosition, vec3 pointNormal, float specularity
 	projectedLBPosition.x *= cameraWH;
 	projectedPosition.x *= cameraWH;
 	if (distance(projectedRLB.xy, projectedPosition.xy) < 0.01 * scale) {
-		lightbugLight = 3.0 * specularity;
+		lightbugLight += 3.0 * specularity;
 	}
 	if (distance(projectedLBPosition.xy, projectedPosition.xy) < 0.01 * scale && projectedLBPosition.z < projectedPosition.z) {
-		lightbugLight = 3.0;
+		lightbugLight += 3.0;
 	}
 	return lightbugLight;
 }

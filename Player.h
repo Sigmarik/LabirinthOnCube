@@ -27,8 +27,10 @@ public:
 	bool shouldSmoothMovement = false;
 	int stage = PLAYER_WAITING_FOR_TURN;
 	Player(GameLevel* level, int index, int numPlayers = 6);
+	bool makeTurn(RandomGenerator& generator);
 	bool checkArtifacts();
 	glm::mat4 worldMatrix() override;
+	Artefact* objective();
 	void update(float deltaTime) override;
 };
 

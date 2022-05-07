@@ -1,6 +1,11 @@
 #include "GameLevel.h"
 
-GameLevel::GameLevel() {}
+GameLevel::GameLevel(RandomGenerator* generator) {
+	for (int i = 0; i < characterNames.size(); i++) {
+		int index = generator->range(0, characterNames.size());
+		std::swap(characterNames[i], characterNames[index]);
+	}
+}
 
 void GameLevel::loadAsset(const char* fname, bool makeSharp, float size) {
 	std::cout << "Loading asset " << fname << '\n';
@@ -50,6 +55,7 @@ glm::mat4 GameComponent::worldMatrix() {
 }
 
 void GameComponent::attach(GameComponent* component) {
+	component->detach();
 	children.push_back(component);
 	component->parent = this;
 }
@@ -90,6 +96,12 @@ int GameComponent::childIndex(GameComponent* child) {
 		if (children[i] == child) return i;
 	}
 	throw std::runtime_error::runtime_error("Child not found.");
+}
+
+void GameComponent::detach() {
+	if (!parent) return;
+	parent->removeChild(this);
+	parent = nullptr;
 }
 
 float GameComponent::getScale(glm::vec3 sample) {

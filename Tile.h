@@ -25,8 +25,8 @@ public:
 	Tile* checkPixel(Camera* camera, glm::vec2 pixel);
 	void generateGeometry(RandomGenerator& generator);
 	glm::mat4 worldMatrix() override;
-	std::vector<glm::vec4> getConnections();
-	bool checkAccess(Tile* tile);
+	std::vector<glm::vec4> getConnections(int extras = 0, int mask = 15);
+	bool checkAccess(Tile* tile, bool allowAll = false);
 	void update(float deltaTime) override;
 	void draw(Camera& camera, int shaderSlot) override;
 };

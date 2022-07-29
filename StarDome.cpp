@@ -19,13 +19,12 @@ StarDome::StarDome(GameLevel* level, int count, RandomGenerator* generator) {
 	mesh->mesh->shaders[RENDER_MAIN_PASS] = parentLevel->getShader("StarShader");
 	children.push_back(mesh);
 	for (int i = 0; i < count; i++) {
-		float x = (float)generator->range(-100, 100) / 100.0f;
-		float y = (float)generator->range(-100, 100) / 100.0f;
-		float z = (float)generator->range(-100, 100) / 100.0f;
-		float k = -0.21;
-		x /= pow(abs(x), k);
-		y /= pow(abs(y), k);
-		z /= pow(abs(z), k);
+		float x = 0.0, y = 0.0, z = 0.0;
+		do {
+			x = (float)generator->range(-100, 100) / 100.0f;
+			y = (float)generator->range(-100, 100) / 100.0f;
+			z = (float)generator->range(-100, 100) / 100.0f;
+		} while (x * x + y * y + z * z > 1.0);
 		glm::vec3 position = glm::normalize(glm::vec3(x, y, z)) * 5.0f;
 		//position = glm::vec3(x, y, z) * 5.0f;
 		parentLevel->getMesh("StarSquare.txt")->assignInt(i);

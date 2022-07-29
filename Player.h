@@ -5,6 +5,7 @@
 #define PLAYER_PREPARING_FLIP 1
 #define PLAYER_PREPARING_RUN 2
 #define PLAYER_FINISHED_TURN 3
+#define PLAYER_FINISHED_GAME -1
 
 #include "GameLevel.h"
 #include "GameCube.h"
@@ -28,7 +29,7 @@ public:
 	int stage = PLAYER_WAITING_FOR_TURN;
 	Player(GameLevel* level, int index, int numPlayers = 6);
 	bool makeTurn(RandomGenerator& generator);
-	bool checkArtifacts();
+	bool checkArtefacts();
 	glm::mat4 worldMatrix() override;
 	Artefact* objective();
 	void update(float deltaTime) override;

@@ -31,10 +31,6 @@ Tile::Tile(int routs, GameLevel* level, int _id) {
 	sPlane.hidden = true;
 	aPlane.hidden = true;
 	dPlane.hidden = true;
-	//attach(&wPlane);
-	//attach(&sPlane);
-	//attach(&aPlane);
-	//attach(&dPlane);//*/
 }
 
 float Tile::roadTransition(float k) {
@@ -95,7 +91,7 @@ void Tile::generateGeometry(RandomGenerator& generator) {
 				glm::vec2((float)i / gridSide, (float)j / gridSide),
 				color
 			);
-			float gradient = max(0.0, 1.0 - glm::length(glm::vec2(relativeX, relativeY)) * 2.0);
+			float gradient = max(0.0001, 1.0 - std::pow(std::max(abs(relativeX), abs(relativeZ)) * 2.0, 10));
 			float downwardsY = ((float)generator.range(0, 2e3) / (float)1e3) * 0.1;
 			mesh->vertices[gridSide * gridSide + i * gridSide + j] = Vertex(
 				glm::vec3(relativeX, -downwardsY * gradient, relativeZ),
@@ -254,22 +250,22 @@ void Tile::update(float deltaTime) {
 	dPlane.transform[3] = glm::vec4(glm::inverse(glm::mat3(transform)) * glm::vec3(0.0, yShift, centreShift), 1.0); 
 }
 
-std::vector<glm::vec4> Tile::getConnections() {
+std::vector<glm::vec4> Tile::getConnections(int extras, int mask) {
 	std::vector<glm::vec4> answer;
 	float centreShift = 0.5;
 	float yShift = 0.0;
-	if (openedRouts & (1 << 0)) answer.push_back(GameComponent::worldMatrix() * 
-		glm::vec4(/*glm::inverse(glm::mat3(transform)) * */glm::vec3(centreShift, yShift, 0.0), 1.0));
-	if (openedRouts & (1 << 1)) answer.push_back(GameComponent::worldMatrix() * 
-		glm::vec4(/*glm::inverse(glm::mat3(transform)) * */glm::vec3(-centreShift, yShift, 0.0), 1.0));
-	if (openedRouts & (1 << 2)) answer.push_back(GameComponent::worldMatrix() * 
-		glm::vec4(/*glm::inverse(glm::mat3(transform)) * */glm::vec3(0.0, yShift, centreShift), 1.0));
-	if (openedRouts & (1 << 3)) answer.push_back(GameComponent::worldMatrix() * 
-		glm::vec4(/*glm::inverse(glm::mat3(transform)) * */glm::vec3(0.0, yShift, -centreShift), 1.0));
+	if (mask & (1 << 0) && (extras & (1 << 0) || openedRouts & (1 << 0))) answer.push_back(GameComponent::worldMatrix() * 
+		glm::vec4(glm::vec3(centreShift, yShift, 0.0), 1.0));
+	if (mask & (1 << 1) && (extras & (1 << 1) || openedRouts & (1 << 1))) answer.push_back(GameComponent::worldMatrix() *
+		glm::vec4(glm::vec3(-centreShift, yShift, 0.0), 1.0));
+	if (mask & (1 << 2) && (extras & (1 << 2) || openedRouts & (1 << 2))) answer.push_back(GameComponent::worldMatrix() *
+		glm::vec4(glm::vec3(0.0, yShift, centreShift), 1.0));
+	if (mask & (1 << 3) && (extras & (1 << 3) || openedRouts & (1 << 3))) answer.push_back(GameComponent::worldMatrix() *
+		glm::vec4(glm::vec3(0.0, yShift, -centreShift), 1.0));
 	return answer;
 }
 
-bool Tile::checkAccess(Tile* tile) {
+bool Tile::checkAccess(Tile* tile, bool allowAll) {
 	for (glm::vec3 pointA : getConnections()) {
 		for (glm::vec3 pointB : tile->getConnections()) {
 			if (glm::distance(pointA, pointB) <= getScale() * 0.001) return true;

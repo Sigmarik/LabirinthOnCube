@@ -42,14 +42,13 @@ void Camera::pushMatrices(Shader& shader, bool shadowCamera) {
 }
 
 void Camera::operateInputs(GLFWwindow* window, double deltaTime) {
-	/*
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		position += glm::normalize(forward) * (float)(speed * deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+		armLength *= 1 - .5 * deltaTime;
 	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		position -= glm::normalize(forward) * (float)(speed * deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+		armLength *= 1 + .5 * deltaTime;
 	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+	/*if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		position -= glm::normalize(glm::cross(forward, up)) * (float)(speed * deltaTime);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {

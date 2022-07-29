@@ -288,3 +288,19 @@ void Cube::shiftCell(GameSide* gSide, int i_it, int j_it, glm::vec2 shift, int s
 	gSide->reassignChildren();
 	shiftCell(targetSide, cellI, cellJ, newShift, slideCount + 1);
 }
+
+float distManhattan(glm::vec3 v_a, glm::vec3 v_b) {
+	return abs(v_a.x - v_b.x) + abs(v_a.y - v_b.y) + abs(v_a.z - v_b.z);
+}
+
+float Cube::distance(Tile* alpha, Tile* beta) {
+	if (glm::dot(
+		glm::vec3(alpha->GameComponent::worldMatrix() * glm::vec4(0.0, 1.0, 0.0, 0.0)),
+		glm::vec3(beta->GameComponent::worldMatrix() * glm::vec4(0.0, 1.0, 0.0, 0.0))) < -0.5) {
+		return 40.0 - distManhattan(
+			alpha->GameComponent::worldMatrix() * glm::vec4(0.0, 0.0, 0.0, 1.0),
+			beta->GameComponent::worldMatrix() * glm::vec4(0.0, 0.0, 0.0, 1.0));
+	}
+	return distManhattan(alpha->GameComponent::worldMatrix() * glm::vec4(0.0, 0.0, 0.0, 1.0),
+		beta->GameComponent::worldMatrix()* glm::vec4(0.0, 0.0, 0.0, 1.0));
+}

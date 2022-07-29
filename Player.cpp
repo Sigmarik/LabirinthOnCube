@@ -35,15 +35,19 @@ Player::Player(GameLevel* level, int index, int maxPlayers) {
 	mesh->updateBuffers();
 }
 
-bool Player::checkArtifacts() {
+bool Player::checkArtefacts() {
 	if (!parent) return false;
 	if (bountylist.size() == 0) return false;
-	for (GameComponent* child : parent->children) {
-		if (child == bountylist[bountylist.size() - 1]) {
-			bountylist[bountylist.size() - 1]->collect();
-			bountylist.pop_back();
-			return true;
+	if (bountylist[bountylist.size() - 1]->parent == parent) {
+		bountylist[bountylist.size() - 1]->collect();
+		bountylist.pop_back();
+		if (bountylist.size() == 0) {
+			StaticMeshComponent* camp = new StaticMeshComponent();
+			camp->mesh = parentLevel->getMesh("Camp.txt");
+			camp->attachTo(parent);
+			//stage = PLAYER_FINISHED_GAME;
 		}
+		return true;
 	}
 }
 
@@ -69,32 +73,89 @@ glm::mat4 Player::worldMatrix() {
 bool Player::makeTurn(RandomGenerator& generator) {
 	if (!bot) return false;
 	Cube* cube = (Cube*)parent->parent->parent;
+	Tile* tile = (Tile*)parent;
 	if (stage == PLAYER_PREPARING_FLIP) {
 		shouldSmoothMovement = false;
 		std::vector<GameSide*> sides = cube->sides();
 		GameSide* chosenSide = sides[generator.range(0, sides.size())];
-		int cellI = generator.range(0, chosenSide->size);
-		int cellJ = generator.range(0, chosenSide->size);
 		std::vector<int> keys = { GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_A, GLFW_KEY_D };
 		int key = keys[generator.range(0, keys.size())];
-		cube->activeTile = chosenSide->tiles[cellI][cellJ];
-		cube->receveInput(key, true);
-		stage = PLAYER_PREPARING_RUN;
+		int cellI = generator.range(0, chosenSide->size);
+		int cellJ = generator.range(0, chosenSide->size);
+		glm::vec2 finalShift = glm::vec2(0.0);
+		float minDist = 100.0;
+		if (bountylist.size() > 0) {
+			chosenSide = (GameSide*)parent->parent;
+			for (int iter = 0; iter < chosenSide->size; iter++) {
+				for (glm::vec2 shift : {glm::vec2(0.0, -1.0), glm::vec2(0.0, 1.0), glm::vec2(-1.0, 0.0), glm::vec2(1.0, 0.0)}) {
+					cube->shiftCell(chosenSide, iter, iter, shift);
+					std::vector<Tile*> checkcells;
+					for (GameSide* side : cube->sides()) {
+						for (int i = 0; i < side->size - 1; i++) {
+							checkcells.push_back(side->tiles[i][0]);
+							checkcells.push_back(side->tiles[i + 1][side->size - 1]);
+							checkcells.push_back(side->tiles[0][i + 1]);
+							checkcells.push_back(side->tiles[side->size - 1][i]);
+						}
+					}
+					for (int i = 0; i < ((GameSide*)tile->parent)->size; i++) {
+						for (int j = 0; j < ((GameSide*)tile->parent)->size; j++) {
+							checkcells.push_back(((GameSide*)tile->parent)->tiles[i][j]);
+						}
+					}
+					for (Tile* cell : checkcells) {
+						if (!tile->checkAccess(cell)) continue;
+						float distance = cube->distance(cell, (Tile*)bountylist[bountylist.size() - 1]->parent);
+						if (minDist > distance || (minDist == distance && generator.range(0, 100) < 50.0)) {
+							minDist = distance;
+							cellI = iter;
+							cellJ = iter;
+							finalShift = shift;
+						}
+					}
+					cube->shiftCell(chosenSide, iter, iter, -shift);
+				}
+			}
+		}
+		if (length(finalShift) > 0.01) cube->shiftCell(chosenSide, cellI, cellJ, finalShift);
+		else {
+			cube->activeTile = chosenSide->tiles[cellI][cellJ];
+			cube->receveInput(key, true);
+		}
+		if (bountylist.size() > 0) stage = PLAYER_PREPARING_RUN;
+		else stage = PLAYER_FINISHED_TURN;
 		return true;
 	}
 	if (stage == PLAYER_PREPARING_RUN) {
 		shouldSmoothMovement = true;
 		std::vector<GameSide*> sides = cube->sides();
 		Tile* targetTile = nullptr;
-		do {
-			GameSide* side = sides[generator.range(0, sides.size())];
-			int cellI = generator.range(0, side->size);
-			int cellJ = generator.range(0, side->size);
-			targetTile = side->tiles[cellI][cellJ];
-		} while (!((Tile*)parent)->checkAccess(targetTile));
+		if (bountylist.size() == 0) {
+			do {
+				GameSide* side = sides[generator.range(0, sides.size())];
+				int cellI = generator.range(0, side->size);
+				int cellJ = generator.range(0, side->size);
+				targetTile = side->tiles[cellI][cellJ];
+			} while (!((Tile*)parent)->checkAccess(targetTile));
+		}
+		else {
+			float minDist = 100.0;
+			for (GameSide* side : cube->sides()) {
+				for (int i = 0; i < side->size; i++) {
+					for (int j = 0; j < side->size; j++) {
+						if (!tile->checkAccess(side->tiles[i][j])) continue;
+						float distance = cube->distance(side->tiles[i][j], (Tile*)bountylist[bountylist.size() - 1]->parent);
+						if (minDist > distance) {
+							minDist = distance;
+							targetTile = side->tiles[i][j];
+						}
+					}
+				}
+			}
+		}
 		attachTo(targetTile);
-		checkArtifacts();
 		stage = PLAYER_FINISHED_TURN;
+		checkArtefacts();
 		return true;
 	}
 	return false;

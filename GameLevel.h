@@ -39,7 +39,7 @@ public:
 	bool useWorldRotation = false;
 	GameLevel* parentLevel = nullptr;
 	float localScale = 1.0;
-	bool visible = true;  // Propagates on children
+	bool visible = true;  // Propagates on children 
 	bool hidden = false;  // Only for this component
 	GameComponent();
 	virtual glm::mat4 worldMatrix();

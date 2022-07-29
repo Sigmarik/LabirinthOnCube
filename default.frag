@@ -107,6 +107,10 @@ float operateLightbug(vec3 lightbugPosition, vec3 pointNormal, float specularity
 	return lightbugLight;
 }
 
+float rand(vec2 co){
+    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
 void main() {
 	float noiseValue = texture(noiseMap, vec2(vertColor.x + tilePosition.x, vertColor.z + tilePosition.y + tilePosition.z)).r;
 	vec3 newNormal = normal;
@@ -174,6 +178,8 @@ void main() {
 		+ finalColor * moonColor * moonLight * (1.0 - lightAmount)
 		+ sunColor * specularLight * lightAmount + vec4(lightbugColor * lightbugLight, 0.0), 
 		vec4(0.8, 0.79, 0.8, 1.0), fogDencity(preprocessWorldPosition));
+
+	//fragColor = vec4(rand(worldPosition.xy), rand(worldPosition.xz), rand(worldPosition.yz), 1.0);
 
 	//fragColor = vec4(integer / (6.0 * 9.0));
 }

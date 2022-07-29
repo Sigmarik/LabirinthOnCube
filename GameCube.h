@@ -6,9 +6,8 @@
 #include "GameLevel.h"
 
 class Cube : public GameComponent {
-private:
-	void shiftCell(GameSide* gSide, int i_it, int j_it, glm::vec2 shift, int slideCount = 0);
 public:
+	void shiftCell(GameSide* gSide, int i_it, int j_it, glm::vec2 shift, int slideCount = 0);
 	GameSide top, bottom, front, back, left, right;
 	int side;
 	GameLevel* parentLevel = nullptr;
@@ -18,6 +17,7 @@ public:
 	std::vector<GameSide*> sides();
 	void resetHighlights(bool resetFull = false);
 	void receveInput(int key, bool flushSelection = true);
+	float distance(Tile* alpha, Tile* beta);
 };
 
 #endif

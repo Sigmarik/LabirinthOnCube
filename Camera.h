@@ -35,7 +35,7 @@ public:
 	float orthoWidth  = 1.2;
 	float orthoHeight = 1.2;
 	float nearPlane = 0.1;
-	float farPlane = 10.0;
+	float farPlane = 1000.0;
 	float speed = 30;
 	float sencitivity = 1.0;
 	float armLength = 3.5f;

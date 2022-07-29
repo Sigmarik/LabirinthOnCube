@@ -2,6 +2,7 @@
 #include <vector>
 #include <windows.h>
 #include <algorithm>
+#include <ctime>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -81,7 +82,9 @@ int main() {
 
 	int cubeSide = 3;
 
-	RandomGenerator generator;
+	long long seed = std::time(nullptr);
+	RandomGenerator generator(seed);
+	std::cout << "SEED: " << seed << std::endl;
 
 	std::cout << "Loading assets...\n";
 	GameLevel mainLevel(&generator);
@@ -98,6 +101,8 @@ int main() {
 	glUniform1i(mainLevel.getShader("TexturedDepthShader")->uniform("atlas"), 3);
 	std::cout << "Updoot complete.\n";
 
+	// GAMEPLAY MODELS //
+
 	mainLevel.loadAsset("TreeMesh.txt", true, 0.05);
 	mainLevel.getMesh("TreeMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 
@@ -108,6 +113,29 @@ int main() {
 	mainLevel.loadAsset("pilar.txt", true, 0.1);
 	mainLevel.getMesh("pilar.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 	mainLevel.getMesh("pilar.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("MushroomMesh.txt", true, 0.05 * 0.6);
+	mainLevel.getMesh("MushroomMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+
+	mainLevel.loadAsset("RockMesh.txt", true, 0.05 * 0.4);
+	mainLevel.getMesh("RockMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+
+	mainLevel.loadAsset("ZSquareMesh.txt", false, 0.1 / cubeSide);
+	mainLevel.getMesh("ZSquareMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TexturedShader");
+	mainLevel.getMesh("ZSquareMesh.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("TexturedDepthShader");
+
+	mainLevel.loadAsset("YSquareMesh.txt", false, 1.0);
+	mainLevel.getMesh("YSquareMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TexturedShader");
+	mainLevel.getMesh("YSquareMesh.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("TexturedDepthShader");
+
+	mainLevel.loadAsset("StarSquare.txt", false, 1.0);
+	mainLevel.getMesh("StarSquare.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("StarShader");
+
+	mainLevel.loadAsset("Camp.txt", true, 0.7);
+	mainLevel.getMesh("Camp.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Camp.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	// HEROES //
 
 	mainLevel.loadAsset("Wizard.txt", true, 0.23);
 	mainLevel.getMesh("Wizard.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
@@ -133,6 +161,8 @@ int main() {
 	mainLevel.getMesh("Golem.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 	mainLevel.getMesh("Golem.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
 
+	// ARTEFACTS //
+
 	mainLevel.loadAsset("Sword.txt", true, 0.4);
 	mainLevel.getMesh("Sword.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 	mainLevel.getMesh("Sword.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
@@ -145,9 +175,23 @@ int main() {
 	mainLevel.getMesh("Rings.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 	mainLevel.getMesh("Rings.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
 
+	mainLevel.loadAsset("Book.txt", true, 0.4);
+	mainLevel.getMesh("Book.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Book.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("Plant.txt", true, 0.4);
+	mainLevel.getMesh("Plant.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Plant.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	mainLevel.loadAsset("Tree.txt", true, 0.6);
+	mainLevel.getMesh("Tree.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
+	mainLevel.getMesh("Tree.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
 	mainLevel.loadAsset("Crown.txt", true, 0.4);                    
 	mainLevel.getMesh("Crown.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 	mainLevel.getMesh("Crown.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
+
+	// POINTERS //
 
 	mainLevel.loadAsset("ArrowWithCircle.txt", true, 0.8);
 	mainLevel.getMesh("ArrowWithCircle.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
@@ -156,23 +200,6 @@ int main() {
 	mainLevel.loadAsset("MagicalStuff.txt", true, 0.8);
 	mainLevel.getMesh("MagicalStuff.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
 	mainLevel.getMesh("MagicalStuff.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("DepthShader");
-
-	mainLevel.loadAsset("MushroomMesh.txt", true, 0.05 * 0.6);
-	mainLevel.getMesh("MushroomMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader"); 
-
-	mainLevel.loadAsset("RockMesh.txt", true, 0.05 * 0.4);
-	mainLevel.getMesh("RockMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TerrainShader");
-
-	mainLevel.loadAsset("ZSquareMesh.txt", false, 0.1 / cubeSide);
-	mainLevel.getMesh("ZSquareMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TexturedShader");
-	mainLevel.getMesh("ZSquareMesh.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("TexturedDepthShader");
-
-	mainLevel.loadAsset("YSquareMesh.txt", false, 1.0);
-	mainLevel.getMesh("YSquareMesh.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("TexturedShader");
-	mainLevel.getMesh("YSquareMesh.txt")->shaders[RENDER_DEPTH] = mainLevel.getShader("TexturedDepthShader");
-
-	mainLevel.loadAsset("StarSquare.txt", false, 1.0);
-	mainLevel.getMesh("StarSquare.txt")->shaders[RENDER_MAIN_PASS] = mainLevel.getShader("StarShader");
 
 	const char* atlasName = "wasd.png";
 	mainLevel.loadAtlas(atlasName, GL_TEXTURE3, GL_RGBA);
@@ -217,25 +244,33 @@ int main() {
 	testCube.assignParent();
 	testCube.parent = nullptr;
 	testCube.transform = glm::scale(glm::vec3(1.0 / testCube.side));
+	std::vector<const char*> artefactNames = {"Sword.txt", "Trophy.txt", "Rings.txt", "Book.txt", "Plant.txt", "Tree.txt"};
 	std::vector<Artefact> artefacts;
-	artefacts.push_back(Artefact("Sword.txt", &mainLevel));
-	artefacts.push_back(Artefact("Trophy.txt", &mainLevel));
-	artefacts.push_back(Artefact("Rings.txt", &mainLevel)); 
-	Tile* playerTile = testCube.top.tiles[testCube.side / 2][testCube.side / 2];
+	for (const char* name : artefactNames) {
+		artefacts.push_back(Artefact(name, &mainLevel));
+	}
+	Tile* playerTile = testCube.bottom.tiles[testCube.side / 2][testCube.side / 2];
 	for (int i = 0; i < artefacts.size(); i++) {
-		artefacts[i].decideOnPosition(playerTile, &generator);
+		Tile* avoidanceTile = playerTile;
+		if (i > 0) {
+			avoidanceTile = (Tile*)artefacts[i - 1].parent;
+		}
+		artefacts[i].decideOnPosition(avoidanceTile, &generator);
 	}
 	std::vector<Player*> players;
 	for (GameSide* side : testCube.sides()) {
 		players.push_back(new Player(&mainLevel, players.size()));
-		//testCube.top.tiles[side->size / 2][side->size / 2]->attach(players[players.size() - 1]);
 		side->tiles[side->size / 2][side->size / 2]->attach(players[players.size() - 1]);
 		players[players.size() - 1]->bot = true;
 		players[players.size() - 1]->stage = PLAYER_WAITING_FOR_TURN;
 	}
+
 	players[0]->bot = false;
-	for (int artefactIndex = 0; artefactIndex < artefacts.size(); artefactIndex++)
-		players[0]->bountylist.push_back(&artefacts[artefactIndex]);
+
+	for (int artefactIndex = 0; artefactIndex < artefacts.size(); artefactIndex++) {
+		players[artefactIndex]->bountylist.push_back(&artefacts[artefactIndex]);
+		artefacts[artefactIndex].decideOnPosition((Tile*)players[artefactIndex]->parent, &generator);
+	}
 	StaticMeshComponent* activeCrown = new StaticMeshComponent();
 	activeCrown->mesh = mainLevel.getMesh("Crown.txt");
 	StaticMeshComponent* selectionArrow = new StaticMeshComponent();
@@ -248,7 +283,7 @@ int main() {
 
 	camera.armLength = 2.0;
 	camera.cinematic = true;
-	camera.armStrength = 10.0;
+	camera.armStrength = 8.0;
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
@@ -258,6 +293,7 @@ int main() {
 
 	std::cout << "Preparings are complete, entering main game loop\n";
 	float time = glfwGetTime();
+	float startTime = time;
 	int tick = 0;
 	float debugPrintTime = 0;
 	int previousLMBState = GLFW_RELEASE;
@@ -300,11 +336,12 @@ int main() {
 		shadowCamera.position = glm::mix(shadowCamera.position, 
 			camera.position - camera.localRight() + camera.localUp(), 
 			0.1 * deltaTime);
+		float sunStart = 15.0;
 		shadowCamera.position = glm::mat3(
 			glm::vec3(1.0, 1.0, 1.0),
 			glm::vec3(1.0, 0.0, -1.0),
 			glm::vec3(-1.0, 1.0, -1.0)
-		) * glm::vec3(sin(time * 0.02), cos(time * 0.02), 0.0);
+		) * glm::vec3(sin((time + sunStart) * 0.02), cos((time + sunStart) * 0.02), 0.0);
 		shadowCamera.position = glm::normalize(shadowCamera.position);
 		shadowCamera.forward = -glm::normalize(shadowCamera.position);
 		mainLevel.getShader("TerrainShader")->activate();
@@ -354,7 +391,8 @@ int main() {
 
 		Player* activePlayer = nullptr;
 		for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
-			if (players[playerIndex]->stage == PLAYER_FINISHED_TURN) continue;
+			if (players[playerIndex]->stage == PLAYER_FINISHED_TURN || 
+				players[playerIndex]->stage == PLAYER_FINISHED_GAME) continue;
 			activePlayer = players[playerIndex];
 			if (activePlayer->stage == PLAYER_WAITING_FOR_TURN) {
 				activePlayer->stage++;
@@ -362,14 +400,28 @@ int main() {
 			break;
 		}
 		if (!activePlayer) {
-			for (int playerIndex = 1; playerIndex < players.size(); playerIndex++) {
-				players[playerIndex]->stage = PLAYER_WAITING_FOR_TURN;
+			for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
+				if (players[playerIndex]->stage == PLAYER_FINISHED_TURN) players[playerIndex]->stage = PLAYER_WAITING_FOR_TURN;
 			}
-			players[0]->stage = PLAYER_PREPARING_FLIP;
-			activePlayer = players[0];
+			for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
+				if (players[playerIndex]->stage == PLAYER_WAITING_FOR_TURN) {
+					players[playerIndex]->stage = PLAYER_PREPARING_FLIP;
+					activePlayer = players[playerIndex];
+					break;
+				}
+			}
 		}
 
-		if (activePlayer->bot && time - playerActionTime > 1.5) {
+		// If all players finished the game...
+		bool gameFinished = true;
+		for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
+			if (players[playerIndex]->bountylist.size() > 0) gameFinished = false;
+		}
+		if (gameFinished) {
+			break;
+		}
+
+		if (activePlayer->bot && time - playerActionTime > 0.5 && time - startTime > 3.0) {
 			for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
 				players[playerIndex]->shouldSmoothMovement = false;
 			}
@@ -402,7 +454,7 @@ int main() {
 						activePlayer->stage = PLAYER_FINISHED_TURN;
 						playerActionTime = time;
 						testCube.resetHighlights(true);
-						activePlayer->checkArtifacts();
+						activePlayer->checkArtefacts();
 					}
 					if (activePlayer->stage == PLAYER_PREPARING_RUN) {
 						testCube.resetHighlights(true);
@@ -428,7 +480,8 @@ int main() {
 					players[playerIndex]->shouldSmoothMovement = false;
 				}
 				activePlayer->shouldSmoothMovement = false;
-				activePlayer->stage = PLAYER_PREPARING_RUN;
+				if (activePlayer->bountylist.size() > 0) activePlayer->stage = PLAYER_PREPARING_RUN;
+				else activePlayer->stage = PLAYER_FINISHED_TURN;
 				playerActionTime = time;
 				testCube.receveInput(key, true);
 			}

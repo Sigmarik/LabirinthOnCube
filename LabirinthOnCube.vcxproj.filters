@@ -31,6 +31,12 @@
     <Filter Include="Source Files\GEngine">
       <UniqueIdentifier>{27583eee-75e7-43db-b617-78f015c342d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Models\Artefacts">
+      <UniqueIdentifier>{24b57e8d-310a-4d77-b3f5-9dc9419988f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models\Heroes">
+      <UniqueIdentifier>{454b1610-9a8f-466e-82ca-3b84e9637945}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -234,33 +240,6 @@
     <Text Include="pilar.txt">
       <Filter>Resource Files\Models</Filter>
     </Text>
-    <Text Include="Wizard.txt">
-      <Filter>Resource Files\Models</Filter>
-    </Text>
-    <Text Include="Sword.txt">
-      <Filter>Resource Files\Models</Filter>
-    </Text>
-    <Text Include="Trophy.txt">
-      <Filter>Resource Files\Models</Filter>
-    </Text>
-    <Text Include="Rings.txt">
-      <Filter>Resource Files\Models</Filter>
-    </Text>
-    <Text Include="Berserk.txt">
-      <Filter>Resource Files\Models</Filter>
-    </Text>
-    <Text Include="Yaga.txt">
-      <Filter>Resource Files\Models</Filter>
-    </Text>
-    <Text Include="Elsa.txt">
-      <Filter>Resource Files\Models</Filter>
-    </Text>
-    <Text Include="Knight.txt">
-      <Filter>Resource Files\Models</Filter>
-    </Text>
-    <Text Include="Golem.txt">
-      <Filter>Resource Files\Models</Filter>
-    </Text>
     <Text Include="Crown.txt">
       <Filter>Resource Files\Models</Filter>
     </Text>
@@ -268,6 +247,45 @@
       <Filter>Resource Files\Models</Filter>
     </Text>
     <Text Include="MagicalStuff.txt">
+      <Filter>Resource Files\Models</Filter>
+    </Text>
+    <Text Include="Book.txt">
+      <Filter>Resource Files\Models\Artefacts</Filter>
+    </Text>
+    <Text Include="Plant.txt">
+      <Filter>Resource Files\Models\Artefacts</Filter>
+    </Text>
+    <Text Include="Rings.txt">
+      <Filter>Resource Files\Models\Artefacts</Filter>
+    </Text>
+    <Text Include="Tree.txt">
+      <Filter>Resource Files\Models\Artefacts</Filter>
+    </Text>
+    <Text Include="Sword.txt">
+      <Filter>Resource Files\Models\Artefacts</Filter>
+    </Text>
+    <Text Include="Trophy.txt">
+      <Filter>Resource Files\Models\Artefacts</Filter>
+    </Text>
+    <Text Include="Berserk.txt">
+      <Filter>Resource Files\Models\Heroes</Filter>
+    </Text>
+    <Text Include="Elsa.txt">
+      <Filter>Resource Files\Models\Heroes</Filter>
+    </Text>
+    <Text Include="Golem.txt">
+      <Filter>Resource Files\Models\Heroes</Filter>
+    </Text>
+    <Text Include="Knight.txt">
+      <Filter>Resource Files\Models\Heroes</Filter>
+    </Text>
+    <Text Include="Wizard.txt">
+      <Filter>Resource Files\Models\Heroes</Filter>
+    </Text>
+    <Text Include="Yaga.txt">
+      <Filter>Resource Files\Models\Heroes</Filter>
+    </Text>
+    <Text Include="Camp.txt">
       <Filter>Resource Files\Models</Filter>
     </Text>
   </ItemGroup>

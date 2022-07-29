@@ -15,6 +15,7 @@ GameSide::GameSide(int side, RandomGenerator& generator, GameLevel* level, int s
 				int gen = generator.range(0, 100);
 				if (gen < 60) routs += (1 << pointer);
 			}
+			if (i == size / 2 && j == size / 2 && routs == 0) routs = generator.range(1, 16);
 			tiles[i][j] = new Tile(routs, parentLevel, i * size + j + startIndex);
 			tiles[i][j]->parent = this;
 			tiles[i][j]->transform = glm::translate(glm::vec3(
